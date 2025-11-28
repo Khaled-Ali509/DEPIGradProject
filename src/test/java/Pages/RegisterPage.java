@@ -153,3 +153,4 @@ public class RegisterPage {
     }
 
 }
+//=============By Khaled Ali==============

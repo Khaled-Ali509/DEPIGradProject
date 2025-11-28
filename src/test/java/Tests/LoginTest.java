@@ -66,3 +66,4 @@ public class LoginTest {
         loginPage.assertSuccessfulLogout();
     }
 }
+//=============By Khaled Ali==============

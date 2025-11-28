@@ -60,3 +60,4 @@ public class LoginPage {
         Assert.assertTrue(driver.findElement(loginTitle).getText().contains("Login to your account"));
     }
 }
+//=============By Khaled Ali==============
