@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class Checkout_Page extends BaseTest {
 
-public Checkout_Page(WebDriver driver) {this.driver = driver;}
+    public Checkout_Page(WebDriver driver) {this.driver = driver;}
     // Locators
     public By payment_heading = By.xpath("//h2[@class='heading']");
     public By customerName = By.name("name_on_card");
@@ -24,8 +24,9 @@ public Checkout_Page(WebDriver driver) {this.driver = driver;}
     public By deleteItem = By.xpath("//a[@class='cart_quantity_delete']");
     public By placeOrder_btn =By.xpath("//a[@href='/payment']");
     public By placeOrder_btn2 = By.xpath("//a[@class='btn btn-default check_out']");
-    By successMsg = By.xpath("//p[contains(text(), 'Congratulations! Your order has been confirmed!')]");
-
+    public By pay_now_btn = By.id("submit");
+    public By success_alert = By.xpath("//div[@class='alert-success alert']");
+    public By paymentConfirmation_msg = By.xpath("//p[contains(text(),'Congratulations!')]");
 
     // Temporary Login
     public By userEmail = By.name("email");
@@ -44,7 +45,7 @@ public Checkout_Page(WebDriver driver) {this.driver = driver;}
         driver.findElement(cvc).sendKeys(Integer.toString(cvcNo));
         driver.findElement(expirationMonth).sendKeys(month);
         driver.findElement(expirationYear).sendKeys(Integer.toString(year));
-        driver.findElement(payButton).click();
+
 
     }
 
@@ -57,8 +58,8 @@ public Checkout_Page(WebDriver driver) {this.driver = driver;}
     public void temporaryLogin()
     {
         driver.get("https://automationexercise.com/login");
-        driver.findElement(userEmail).sendKeys("khaled.leedo258@gmail.com");
-        driver.findElement(userPassword).sendKeys("ِسيشسي123");
+        driver.findElement(userEmail).sendKeys("ashmaweyahmed7@gmail.com");
+        driver.findElement(userPassword).sendKeys("12345678");
         driver.findElement(login_btn).click();
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated( logout_btn));
@@ -91,13 +92,35 @@ public Checkout_Page(WebDriver driver) {this.driver = driver;}
         boolean headingIsDisplayed = driver.findElement(payment_heading).isDisplayed();
 
     }
+    public void moveToPaymentPage()
+    {
+        driver.findElement(placeOrder_btn).click();
+        Assert.assertEquals(driver.getCurrentUrl(),"https://automationexercise.com/payment");
+
+    }
     public void checkPaymentSuccess()
     {
+        driver.findElement(pay_now_btn).click();
+        String successAlertMessage = driver.findElement(success_alert).getText();
+//        Assert.assertEquals(successAlertMessage,"Your order has been placed successfully!");
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(paymentConfirmation_msg));
+        Assert.assertEquals(driver.findElement(paymentConfirmation_msg).getText(),"Congratulations! Your order has been confirmed!");
 
-        String actualMsg = driver.findElement(successMsg).getText();
-        Assert.assertEquals(actualMsg.trim(),
-                "Congratulations! Your order has been confirmed!");
+    }
 
+    public void checkPaymentWithoutMandatoryData() {
+        driver.findElement(pay_now_btn).click();
+        Assert.assertEquals(driver.getCurrentUrl(),"https://automationexercise.com/payment");
+    }
+    public void checkPaymentWithInvalidData() {
+        driver.findElement(pay_now_btn).click();
+        String successAlertMessage = driver.findElement(success_alert).getText();
+        Assert.assertNotEquals(successAlertMessage, "Your order has been placed successfully!");
+    }
+    public  void logout ()
+    {
+        driver.findElement(logout_btn).click();
     }
 
 }
